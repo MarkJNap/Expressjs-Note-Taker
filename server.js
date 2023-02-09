@@ -33,30 +33,30 @@ app.get("*", (req, res) => {
 app.post("/api/notes", (req, res) => {
     const newNote = req.body;
     // Makes sure the note is not empty
-    if (!newNote.title ||!newNote.text) {
+    if (!newNote.title || !newNote.text) {
         return res.status(400).json({ message: "Please enter a title and text" });
     } else {
-    // Adding an id to the new note using the uuid module limited to 16 characters
-    newNote.id = uuidv4().slice(0, 16);
-    dbData.push(newNote);
-    // The JSON.stringify(dbData, null, 2)) specifically the null and 2 are needed 
-    // To get the correct formatting of the object in the db.json file
-    fs.writeFileSync("./db/db.json", JSON.stringify(dbData, null, 2));
-    console.log("A note with the title:\n'" + newNote.title + "'\nHas been successfully added!");
-    res.json(newNote);
+        // Adding an id to the new note using the uuid module limited to 16 characters
+        newNote.id = uuidv4().slice(0, 16);
+        dbData.push(newNote);
+        // The JSON.stringify(dbData, null, 2)) specifically the null and 2 are needed 
+        // To get the correct formatting of the object in the db.json file
+        fs.writeFileSync("./db/db.json", JSON.stringify(dbData, null, 2));
+        console.log("\nA note with the title:\n'" + newNote.title + "'\nHas been successfully added!");
+        res.json(newNote);
     }
 });
 
-// Delete Route for deleting a specific note with a specific id
+// Delete Route for deleting a specific note from its unique id
 app.delete("/api/notes/:id", (req, res) => {
     let id = req.params.id;
     // Filters out the note with the specific id and keeps the rest of the notes
-    dbData = dbData.filter(note => note.id!== id);
+    dbData = dbData.filter(note => note.id !== id);
     fs.writeFileSync("./db/db.json", JSON.stringify(dbData, null, 2));
-    console.log("A note with the id:\n'" + id + "'\nHas been successfully deleted!");
+    console.log("\nA note with the id:\n'" + id + "'\nHas been successfully deleted!");
     res.json(dbData);
 });
 
 app.listen(PORT, () =>
-  console.log(`App listening at PORT: ${PORT}`)
+    console.log(`App listening at PORT: ${PORT}`)
 );

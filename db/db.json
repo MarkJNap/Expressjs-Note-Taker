@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "title": "Example Note",
+    "text": "Here is some text to fill in some space",
+    "id": "ad98db6f-04e3-4a"
+  },
+  {
+    "title": "Yet again another Note!",
+    "text": "This one is the second note.",
+    "id": "186cecdf-9a29-42"
+  }
+]
