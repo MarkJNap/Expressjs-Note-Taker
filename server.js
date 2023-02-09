@@ -21,7 +21,7 @@ app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
-// GET Route for retrieving all the tips
+// GET Route for retrieving all the saved note
 app.get("/api/notes", (req, res) => res.json(dbData));
 
 // GET Route for always redirecting to index homepage
@@ -32,11 +32,15 @@ app.get("*", (req, res) => {
 // POST Route for adding a new note
 app.post("/api/notes", (req, res) => {
     const newNote = req.body;
+    // Makes sure the note is not empty
     if (!newNote.title ||!newNote.text) {
         return res.status(400).json({ message: "Please enter a title and text" });
     } else {
+    // Adding an id to the new note using the uuid module limited to 16 characters
     newNote.id = uuidv4().slice(0, 16);
     dbData.push(newNote);
+    // The JSON.stringify(dbData, null, 2)) specifically the null and 2 are needed 
+    // To get the correct formatting of the object in the db.json file
     fs.writeFileSync("./db/db.json", JSON.stringify(dbData, null, 2));
     console.log("A note with the title:\n'" + newNote.title + "'\nHas been successfully added!");
     res.json(newNote);
@@ -46,6 +50,7 @@ app.post("/api/notes", (req, res) => {
 // Delete Route for deleting a specific note with a specific id
 app.delete("/api/notes/:id", (req, res) => {
     let id = req.params.id;
+    // Filters out the note with the specific id and keeps the rest of the notes
     dbData = dbData.filter(note => note.id!== id);
     fs.writeFileSync("./db/db.json", JSON.stringify(dbData, null, 2));
     console.log("A note with the id:\n'" + id + "'\nHas been successfully deleted!");
@@ -53,5 +58,5 @@ app.delete("/api/notes/:id", (req, res) => {
 });
 
 app.listen(PORT, () =>
-  console.log(`App listening at PORT: ${PORT} 🚀`)
+  console.log(`App listening at PORT: ${PORT}`)
 );
